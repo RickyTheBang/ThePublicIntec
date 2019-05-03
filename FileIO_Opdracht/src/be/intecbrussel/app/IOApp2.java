@@ -6,14 +6,13 @@ import be.intecbrussel.utilities.FilesTools;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 
 
-public class IOApp {
+public class IOApp2 {
 
-  //  public static List<File> all = new ArrayList<>();
+    public static List<File> all = new ArrayList<>();
 
     public static void main(String[] args) {
 
@@ -50,7 +49,6 @@ public class IOApp {
             List<ObjectFile> listFileAttributes = FilesTools.createListFileAttributes();
 
 
-
             for (String s : new HashSet<>(mapFileDir.values())) {
 
                 Path p2 = sortedPath.resolve(s);
@@ -60,46 +58,27 @@ public class IOApp {
 
             // 7) Copy of the files in the sorted directory
             for (ObjectFile of : listFileAttributes) {
-
-           FilesTools.checkIfFileExistElseCopy(of.getSourcePath(), of.getCompletePath());
-               System.out.println(of.getCompletePath());
-                System.out.println(of.getSourcePath());
-                System.out.println(of.getCompleteDirectory());
+                FilesTools.checkIfFileExistElseCopy(of.getSourcePath(), of.getCompletePath());
 
             }
 
-            // 8) Creation of the summary directory
-
-          FilesTools.checkIfsummaryDirExistElseCreate();
-
-           listFileAttributes.sort(Comparator.comparing(a -> a.getDirectory()));
+            //listFileAttributes.sort(Comparator.comparing(a -> a.getDirectory()));
 
             // print
-
-
-
 
             for(int i = 0;i<listFileAttributes.size(); i++){
 
                 ObjectFile of= listFileAttributes.get(i);
-                String ext = of.getDirectory();
-                String name = of.getFileNameString();
-                String read = of.isReadable()?"x":"/";
-                String write = of.isWritable()?"x":"/";
-                boolean w = of.isWritable();
-                boolean h = of.isHidden();
-              //  System.out.format("%-15s %-50s %-5s %-5s %-5b  %-5b %n", ext,name,read,write,w, h);
+              //  System.out.println(of.getDirectory() + " " + of.getFileName());
 
 
             }
-        } catch (Exception e) {
+        } catch (IOException e) {
             System.out.println("Whoops: " + e.getMessage());
             e.printStackTrace();
-            e.toString();
-           // System.out.println(e.fillInStackTrace());
+            // System.out.println(e.fillInStackTrace());
         }
     }
 
 
 }
-

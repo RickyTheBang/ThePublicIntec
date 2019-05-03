@@ -13,18 +13,24 @@ import java.util.stream.Collectors;
 public class FilesTools {
     private static Path sortedPath = Paths.get("C:/data/sorted");
     private static Path unsortedPath = Paths.get("C:/data/unsorted");
+    private static Path summaryPath = Paths.get("C:/data/sorted/summary");
     private static List<File> document;
     private static Set<String> extension = new HashSet<>();
     private static Map<File, String> mapFileDir = new HashMap<>();
     private static List<ObjectFile> listFileAttributes = new ArrayList<>();
 
 
-    public static Path checkIfTargetDirExistElseCreate() throws IOException {
+    public static Path checkIfSortedDirExistElseCreate() throws IOException {
         checkIfDirExistElseCreate(sortedPath);
         return sortedPath;
     }
 
-    public static Path sourceDirPathCreate() {
+    public static Path checkIfsummaryDirExistElseCreate() throws IOException {
+        checkIfDirExistElseCreate(summaryPath);
+        return summaryPath;
+    }
+
+    public static Path checkIfUnsortedExistPathElseCreate() {
         return unsortedPath;
     }
 
@@ -65,6 +71,10 @@ public class FilesTools {
         return document;
     }
 
+
+
+
+
     // Map the files with their extensions
     public static Map<File, String> createMapFileDir(List<File> documents) {
         for (File d : documents) {
@@ -86,5 +96,4 @@ public class FilesTools {
         }
         return listFileAttributes;
     }
-
 }

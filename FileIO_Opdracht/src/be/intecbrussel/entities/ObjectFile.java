@@ -16,28 +16,31 @@ public class ObjectFile {
 
 
     private Path sortedDirectory = Paths.get("C:/data/sorted");
-    private Path CompleteDirectory;
-    private Path CompletePath;
+    private Path completeDirectory;
+    private Path completePath;
     private Path sourcePath;
     private String directory;
-    private File fileName;
+    private File fileNameFile;
     private String fileNameString;
     private boolean writable;
     private boolean readable;
+    private boolean hidden;
 
     public ObjectFile(File file, String directory) {
 
         setDirectory(directory);
         setReadable(file.canRead());
         setWritable(file.canWrite());
-        setCompleteDirectory(sortedDirectory.resolve(directory));
-        setCompletePath(getCompleteDirectory().resolve(file.toPath()));
-        setFileName(file.toPath().getFileName().toFile());
-        setFileName(file.toPath().getFileName().toFile());
+        setCompleteDirectory(getSortedDirectory().resolve(directory));
+        setCompletePath(getCompleteDirectory().resolve(file.toPath().getFileName()));
+        setFileNameFile(file.toPath().getFileName().toFile());
+        setFileNameString(getFileNameFile().toString());
         setSourcePath(file.toPath());
+        setHidden(file.isHidden());
+
+
 
     }
-
 
     public Path getSortedDirectory() {
         return sortedDirectory;
@@ -48,19 +51,19 @@ public class ObjectFile {
     }
 
     public Path getCompleteDirectory() {
-        return CompleteDirectory;
+        return completeDirectory;
     }
 
     public void setCompleteDirectory(Path completeDirectory) {
-        CompleteDirectory = completeDirectory;
+        this.completeDirectory = completeDirectory;
     }
 
     public Path getCompletePath() {
-        return CompletePath;
+        return completePath;
     }
 
     public void setCompletePath(Path completePath) {
-        CompletePath = completePath;
+        this.completePath = completePath;
     }
 
     public Path getSourcePath() {
@@ -79,12 +82,12 @@ public class ObjectFile {
         this.directory = directory;
     }
 
-    public File getFileName() {
-        return fileName;
+    public File getFileNameFile() {
+        return fileNameFile;
     }
 
-    public void setFileName(File fileName) {
-        this.fileName = fileName;
+    public void setFileNameFile(File fileNameFile) {
+        this.fileNameFile = fileNameFile;
     }
 
     public String getFileNameString() {
@@ -109,5 +112,13 @@ public class ObjectFile {
 
     public void setReadable(boolean readable) {
         this.readable = readable;
+    }
+
+    public boolean isHidden() {
+        return hidden;
+    }
+
+    public void setHidden(boolean hidden) {
+        this.hidden = hidden;
     }
 }
