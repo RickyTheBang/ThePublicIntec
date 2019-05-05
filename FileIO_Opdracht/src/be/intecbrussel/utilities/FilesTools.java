@@ -20,9 +20,8 @@ public class FilesTools {
     private static List<ObjectFile> listFileAttributes = new ArrayList<>();
 
 
-    public static Path checkIfSortedDirExistElseCreate() throws IOException {
+    public static void checkIfSortedDirExistElseCreate() throws IOException {
         checkIfDirExistElseCreate(sortedPath);
-        return sortedPath;
     }
 
     public static Path checkIfsummaryDirExistElseCreate() throws IOException {
@@ -62,8 +61,23 @@ public class FilesTools {
 
     }
 
-    public static void createExtensionFileDirectory() throws IOException {
-        for (String s : new HashSet<>(mapFileDir.values())) {
+    /**
+    Thanks to all the information that the ObjectFile contains,
+    It's possible to retrieve all the file's extensions.
+    First this information is add in a Set to keep only the distinct values.
+    Then the creation of the extension directories is made with a for loop fonction
+    on the Set.
+     */
+
+    public static void createExtensionFileDirectory(List<ObjectFile> listObjectFile) throws IOException {
+        Set<String> extensionSet = new HashSet<>();
+        for (ObjectFile l :listObjectFile) {
+
+            extensionSet.add(l.getExtension());
+
+        }
+
+        for(String s :extensionSet){
             Path extensionFileDirectory = sortedPath.resolve(s);
             checkIfDirExistElseCreate(extensionFileDirectory);
         }
@@ -75,7 +89,6 @@ public class FilesTools {
      * and fills it with all the files and directories placed
      * under a given directory. This file is returned
      * to the invoker;
-     * <p>
      * Since there can be subdirectories under subdirectories
      * and so on ..., the method is called recursively.
      */
@@ -105,23 +118,13 @@ public class FilesTools {
     }
 
 
-    // Map the files with their extensions
-    public static Map<File, String> createMapFileDir(List<File> documents) {
-        for (File d : documents) {
-            String type = FilesTools.getSubString(d.getName());
-            extension.add(type);
-            mapFileDir.put(d, type);
-        }
-        return mapFileDir;
-    }
-
-    /*
+    /**
     Creation of a List with all the ObjectFile's. An ObjectFile
     contains all the useful properties of a particular file
     */
-    public static List<ObjectFile> createListFileAttributes() {
-        for (File test : mapFileDir.keySet()) {
-            ObjectFile of = new ObjectFile(test, mapFileDir.get(test));
+    public static List<ObjectFile> createListFileAttributes(List<File> documents ) {
+        for (File doc :documents) {
+            ObjectFile of = new ObjectFile(doc);
             listFileAttributes.add(of);
         }
         return listFileAttributes;
@@ -135,7 +138,7 @@ public class FilesTools {
             String text1 = "%-50s %-4s %-1s  %-2s %-5s  %-1s  %-8s  %-5s  %n%n";
             formatter1.format(text1, "Name", "|", "Readable", "|", "Writable", "|", "Hidden", "|");
             out.write(formatter1.toString());
-            ObjectFile of0 = null;
+            ObjectFile of0;
             for (int i = 0; i < listFileAttributes.size(); i++) {
 
                 if (i > 0) {
@@ -157,7 +160,6 @@ public class FilesTools {
                 }
                 Formatter formatter3 = new Formatter();
                 String text3 = "%-50s %-5s  %-5s  %-5s  %-5s  %-5s %-5s  %-5s %n";
-
                 formatter3.format(text3, name, "|", read, "|", write, "|", hidden, "|");
                 out.write(formatter3.toString());
 

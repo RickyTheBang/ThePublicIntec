@@ -33,20 +33,23 @@ public class ObjectFile {
 
     /**
      * Only one constructor
+     *
      * @param file
-     * @param directory
      */
-    public ObjectFile(File file, String directory) {
-        this.directory = directory;
-        this. readable = file.canRead();
-        this.writable =(file.canWrite());
+    public ObjectFile(File file) {
+
+
+        this.sourcePath = file.toPath();
+        this.fileNameFile = sourcePath.getFileName().toFile();
+        this.fileNameString = fileNameFile.toString();
+        this.directory = FilesTools.getSubString(fileNameFile.toString());
         this.completeDirectory = sortedDirectory.resolve(directory);
-        this.completePath =completeDirectory.resolve(file.toPath().getFileName());
-        this.fileNameFile= file.toPath().getFileName().toFile();
-        this.fileNameString= fileNameFile.toString();
-        this.sourcePath =file.toPath();
-        this.hidden = file.isHidden();
+        this.completePath = completeDirectory.resolve(file.toPath().getFileName());
         this.extension = FilesTools.getSubString(file.getName());
+        this.readable = file.canRead();
+        this.writable = (file.canWrite());
+        this.hidden = file.isHidden();
+
     }
 
     public Path getCompletePath() {
@@ -60,7 +63,6 @@ public class ObjectFile {
     public String getDirectory() {
         return directory;
     }
-
 
     public String getFileNameString() {
         return fileNameString;
