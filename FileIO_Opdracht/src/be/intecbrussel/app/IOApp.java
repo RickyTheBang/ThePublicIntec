@@ -1,151 +1,59 @@
 package be.intecbrussel.app;
 
-import be.intecbrussel.entities.FileAttributes;
-import be.intecbrussel.utilities.FilesRepository;
-import be.intecbrussel.utilities.PathTools;
+import be.intecbrussel.entities.ObjectFile;
+import be.intecbrussel.utilities.FilesTools;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.*;
-import java.util.stream.Collectors;
-
+import java.util.Comparator;
+import java.util.List;
 
 public class IOApp {
 
-    public static List<File> all = new ArrayList<>();
-
     public static void main(String[] args) {
-
-
         try {
+            // 1) Creation of the sorted directory
+            FilesTools.checkIfSortedDirExistElseCreate ();
+            // 2) Creation of the unsorted path
+            Path unsortedPath = FilesTools.checkIfUnsortedExistPathElseCreate ();
 
-            Path sortedPath = Paths.get("C:/data/sorted");
-            Path unsortedPath = Paths.get("C:/data/unsorted");
-            PathTools.checkIfDirExistElseCreate(sortedPath);
-
-            File directory = new File(unsortedPath.toString());
-
-            FilesRepository fr = new FilesRepository();
-
-            List<File> result = fr.fillFileAndDir(directory);
-
-
-            List<File> folder = result.stream()
-                    .filter(a -> a.isDirectory())
-                    .collect(Collectors.toList());
-
-            List<File> document = result.stream()
-                    .filter(a -> a.isFile())
-                    .collect(Collectors.toList());
-/*
-File test = document.get (1);
-            System.out.println (test);
-            System.out.println (test.getName ());
-            System.out.println (test.canRead ());
-            System.out.println (test.canWrite ());
-            System.out.println (test.getParent ());
-            System.out.println (test.getParentFile ());
-            System.out.println (test.getAbsoluteFile ());
-
-            Path path21 = test.toPath ().getFileName ();
-            System.out.println ("p21: " + path21);
-            File f21 = path21.toFile ();
-
-            Path p20 = test.getParentFile ().toPath ().resolve (test.getName ());
-            System.out.println (p20);*/
-
-
-/*
-            for (File f : document) {
-                 System.out.println(f);
-
-
-            }
+            /**3) The List "document" contains only the files under the "unsorted" directory.
+             * The directories are excludes
             */
+            List<File> documents = FilesTools.keepOnlyDocuments (new File (unsortedPath.toString ()));
 
-            Set<String> extension = new HashSet<>();
-            Map<File,String> mapFileDir = new HashMap<>();
-            int count1 = 0;
+            /**
+             4) Creation of a List with all the ObjectFile's. An ObjectFile
+             contains all the useful properties of a particular file
+             */
+            List<ObjectFile> listFileAttributes = FilesTools.createListFileAttributes (documents);
 
-            for (File d : document) {
-              //  System.out.println(d.getName());
-                String type = PathTools.getSubString(d.getName());
-                extension.add(type);
-                count1++;
+            // 5) Creation of the "extension file" directories
+            FilesTools.createExtensionFileDirectory (listFileAttributes);
 
+            // 6) Copy of the files in the sorted directory
+            for (ObjectFile of : listFileAttributes) {
 
-                mapFileDir.put(d,type);
-                //Path p5 = d.toPath().resolve(d.getName());
-               // PathTools.checkIfFileExistElseCreate(p5);
-                //System.out.println(type);
+                FilesTools.checkIfFileExistElseCopy (of.getSourcePath (), of.getCompletePath ());
             }
 
+            // 7) Creation of the summary directory
+            FilesTools.checkIfsummaryDirExistElseCreate ();
 
+            /**
+             8) Before the creation of the summary file, the List listFileAttributes
+             is sorted by the extension of the files
+             */
+            listFileAttributes.sort (Comparator.comparing (a -> a.getExtension ()));
 
-            System.out.println("*****************************");
+            // 9) Creation and creation of the file summary.txt
+            FilesTools.summaryFileCreation ();
 
-            int count2 = 0;
+            // 10) Number of files sorted
+            System.out.println (listFileAttributes.size () + " files have been placed in the sorted directory.");
 
-            List<FileAttributes> listFileAttributes = new ArrayList<> ();
-
-            for(File test: mapFileDir.keySet()){
-                count2++;
-                FileAttributes fa = new FileAttributes (test,mapFileDir.get(test));
-                listFileAttributes.add (fa);
-               /*
-              System.out.println(test + ": " + mapFileDir.get(test));
-
-
-                System.out.println (test);
-                System.out.println (test.getName ());
-                System.out.println (test.canRead ());
-                System.out.println (test.canWrite ());
-                System.out.println (test.getParent ());
-                System.out.println (test.getParentFile ());
-                System.out.println (test.getAbsoluteFile ());
-
-                Path path21 = test.toPath ().getFileName ();
-                System.out.println ("p21: " + path21);
-                File f21 = path21.toFile ();
-
-                Path p20 = test.getParentFile ().toPath ().resolve (test.getName ());
-                System.out.println (p20);
-                //Path path10 = f.resolve(mapFileDir.get(f));
-               // System.out.println(path10);
-             //  PathTools.checkIfFileExistElseCreate(path10);
-
-                */
-            }
-
-            for (String s : extension) {
-
-                Path p2 = sortedPath.resolve(s);
-                PathTools.checkIfDirExistElseCreate(p2);
-
-            }
-
-            for(FileAttributes fa : listFileAttributes){
-                PathTools.checkIfFileExistElseCreate (fa.getCompletePath ());
-            }
-/*
-           String dir = listFileAttributes.get (2).getDirectory ();
-            File fileO = listFileAttributes.get (2).getFileName ();
-            System.out.println (dir);
-            System.out.println (fileO);
-            */
-
-       //  PathTools.checkIfFileExistElseCreate (listFileAttributes.get (2).getCompletePath ());
-
-            System.out.println ("1:" + count1);
-            System.out.println ("2:" + count2);
-
-
-
-
-        } catch (IOException e) {
-            System.out.println("Whoops: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println ("Whoops: " + e.getMessage ());
         }
     }
 
