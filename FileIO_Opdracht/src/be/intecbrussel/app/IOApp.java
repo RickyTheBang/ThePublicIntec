@@ -32,10 +32,7 @@ public class IOApp {
             FilesTools.createExtensionFileDirectory (listFileAttributes);
 
             // 6) Copy of the files in the sorted directory
-            for (ObjectFile of : listFileAttributes) {
-
-                FilesTools.checkIfFileExistElseCopy (of.getSourcePath (), of.getCompletePath ());
-            }
+            FilesTools.copyFiles(listFileAttributes);
 
             // 7) Creation of the summary directory
             FilesTools.checkIfsummaryDirExistElseCreate ();

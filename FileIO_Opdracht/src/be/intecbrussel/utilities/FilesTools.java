@@ -128,6 +128,13 @@ public class FilesTools {
         return listFileAttributes;
     }
 
+    public static void copyFiles(List<ObjectFile> list) throws IOException {
+        // 6) Copy of the files in the sorted directory
+        for (ObjectFile of : list) {
+                checkIfFileExistElseCopy (of.getSourcePath (), of.getCompletePath ());
+        }
+    }
+
 
     public static void summaryFileCreation() throws IOException {
         Path pathOut = Paths.get ("C:/data/sorted/summary/summary.txt");
@@ -159,7 +166,7 @@ public class FilesTools {
                 Formatter formatter3 = new Formatter ();
                 String text3 = "%-60s %-5s  %-5s  %-5s  %-5s  %-5s %-5s  %-5s %n";
                 formatter3.format (text3, name, "|", read, "|", write, "|", hidden, "|");
-                out.print (formatter3.toString ());
+                out.write (formatter3.toString ());
 
 
             }
