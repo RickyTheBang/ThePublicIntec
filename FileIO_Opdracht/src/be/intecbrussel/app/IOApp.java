@@ -17,9 +17,11 @@ public class IOApp {
             // 2) Creation of the unsorted path
             Path unsortedPath = FilesTools.checkIfUnsortedExistPathElseCreate ();
 
+            //TODO: Puntje 4 en 5 zouden geen Javadoc mogen zijn.
             /**3) The List "document" contains only the files under the "unsorted" directory.
              * The directories are excludes
             */
+            //TODO: FilesTools.keepOnlyDocuments(unsortedPath.toFile()); was ook een mogelijkheid.
             List<File> documents = FilesTools.keepOnlyDocuments (new File (unsortedPath.toString ()));
 
             /**
@@ -41,10 +43,11 @@ public class IOApp {
              8) Before the creation of the summary file, the List listFileAttributes
              is sorted by the extension of the files
              */
+            //TODO: listFileAttributes.sort(Comparator.comparing(ObjectFile::getExtension)); kan ook.
             listFileAttributes.sort (Comparator.comparing (a -> a.getExtension ()));
 
             // 9) Creation and creation of the file summary.txt
-            FilesTools.summaryFileCreation ();
+            FilesTools.summaryFileCreation ();  //TODO: ctrl + alt + l
 
             // 10) Number of files sorted
             System.out.println (listFileAttributes.size () + " files have been placed in the sorted directory.");

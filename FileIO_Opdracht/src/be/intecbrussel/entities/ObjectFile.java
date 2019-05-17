@@ -13,9 +13,7 @@ import java.nio.file.Paths;
  * in the directory "sorted".
  */
 
-
 public class ObjectFile {
-
 
     private Path sortedDirectory = Paths.get("C:/data/sorted");
     private Path completeDirectory;
@@ -31,21 +29,25 @@ public class ObjectFile {
     /**
      * Only one constructor
      *
+     * //TODO: Probeer bij gebruik van Javadoc de tag description ook te gebruiken.
      * @param file
      */
     public ObjectFile(File file) {
 
-
+        //TODO: Leuke aanpak, creatief.
         this.sourcePath = file.toPath ();
         this.fileName = sourcePath.getFileName ().toFile ().toString ();
         this.extension = FilesTools.getSubString (file.getName ());
         this.completeDirectory = sortedDirectory.resolve (extension);
+        //TODO: destinationPath zou iets duidelijker zijn.
         this.completePath = completeDirectory.resolve (file.toPath ().getFileName ());
         this.readable = file.canRead ();
-        this.writable = (file.canWrite ());
+        this.writable = (file.canWrite ());  //TODO: Waarom de extra ronde haken?
         this.hidden = file.isHidden ();
 
     }
+
+    //TODO: getDestinationPath zou iets duidelijker geweest zijn.
     public Path getCompletePath() {
         return completePath;
     }
